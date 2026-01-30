@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VibeStream | Premium Music Experience</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="app-layout">
+      <!-- SIDEBAR -->
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-logo">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+            >
+              <path d="M9 18V5l12-2v13"></path>
+              <circle cx="6" cy="18" r="3"></circle>
+              <circle cx="18" cy="16" r="3"></circle>
+            </svg>
+          </div>
+          <h1>VibeStream</h1>
+        </div>
+
+        <nav class="sidebar-nav">
+          <div class="nav-group">
+            <span class="nav-heading">EXPLORE</span>
+            <a href="#" class="nav-link active" data-section="discover"
+              ><span>🏠</span> Discover</a
+            >
+            <a href="#" class="nav-link" data-section="trending"
+              ><span>📊</span> Trending</a
+            >
+            <!-- <a href="#" class="nav-link" data-section="radio"
+              ><span>📻</span> Radio</a
+            > -->
+          </div>
+          <div class="nav-group">
+            <span class="nav-heading">LIBRARY</span>
+            <a
+              href="#"
+              class="nav-link"
+              data-section="favorites"
+              id="favorites-nav-link"
+            >
+              <span>❤️</span> Favorites
+              <span class="nav-badge" id="favorites-count-badge">0</span>
+            </a>
+            <a href="#" class="nav-link" data-section="albums"
+              ><span>💿</span> Albums</a
+            >
+            <a href="#" class="nav-link" data-section="artists"
+              ><span>👤</span> Artists</a
+            >
+          </div>
+        </nav>
+
+        <!-- FAVORITES SECTION (Collapsible) -->
+        <div class="favorites-container" id="favorites-container">
+          <div class="favorites-header" id="favorites-header">
+            <span class="nav-heading">❤️ MY FAVORITES</span>
+            <span class="favorites-toggle" id="favorites-toggle">▼</span>
+          </div>
+          <div id="favorites-list" class="favorites-scroll custom-scrollbar">
+            <!-- Favorites populated by script.js -->
+            <div class="empty-favorites" id="empty-favorites">
+              <span class="empty-icon">💔</span>
+              <p>No favorites yet</p>
+              <small>Click ❤️ on any song to add it here</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- PLAYLIST SECTION -->
+        <div class="playlist-container">
+          <div class="playlist-header">
+            <span class="nav-heading">🎵 ALL TRACKS</span>
+            <span class="track-count" id="track-count">0 tracks</span>
+          </div>
+          <div id="playlist-list" class="playlist-scroll custom-scrollbar">
+            <!-- Tracks populated by script.js -->
+          </div>
+        </div>
+      </aside>
+
+      <!-- MAIN CONTENT -->
+      <main class="main-content">
+        <!-- TOP HEADER -->
+        <header class="main-header">
+          <nav class="menu_top">
+            <span class="active" data-tab="discover">Discover</span>
+            <span data-tab="favorites">Favorites</span>
+            <span data-tab="library">My Library</span>
+            <!-- 1. ADD THIS BUTTON WHERE YOU WANT TO OPEN THE MODAL (e.g., inside <nav class="menu_top">) -->
+            <span
+              id="manage-btn"
+              class="manage-btn"
+              style="cursor: pointer; color: #a855f7; font-weight: 600"
+              >Manage Backend</span
+            >
+            <!-- Manage Backened Option -->
+            <div class="modal" id="admin-modal">
+              <div class="modal-content admin-modal-content">
+                <div class="admin-header">
+                  <h3>Manage Backend</h3>
+                  <button class="modal-close" id="admin-close">✕</button>
+                </div>
+                <div class="admin-body custom-scrollbar">
+                  <!-- ADD SONG FORM -->
+                  <div class="admin-section">
+                    <h4>1. Add New Song</h4>
+                    <form id="add-song-form" class="add-song-form">
+                      <div class="form-group">
+                        <label>Title</label>
+                        <input
+                          type="text"
+                          id="new-title"
+                          placeholder="Song Title"
+                          required
+                        />
+                      </div>
+                      <div class="form-group">
+                        <label>Artist</label>
+                        <input
+                          type="text"
+                          id="new-artist"
+                          placeholder="Artist Name"
+                          required
+                        />
+                      </div>
+                      <div class="form-group">
+                        <label>Audio URL (MP3)</label>
+                        <input
+                          type="url"
+                          id="new-url"
+                          placeholder="https://example.com/song.mp3"
+                          required
+                        />
+                      </div>
+                      <div class="form-group">
+                        <label>Cover Image URL</label>
+                        <input
+                          type="url"
+                          id="new-cover"
+                          placeholder="https://example.com/cover.jpg"
+                        />
+                      </div>
+                      <button type="submit" class="submit-btn">
+                        Add to Library
+                      </button>
+                    </form>
+                  </div>
+                  <!-- DELETE SONG LIST -->
+                  <div class="admin-section">
+                    <h4>2. Manage Current Songs</h4>
+                    <div id="admin-song-list" class="song-list-admin">
+                      <!-- Populated by JS -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </nav>
+
+          <div class="header-right">
+            <div class="search_box">
+              <span class="search-icon">🔍</span>
+              <input
+                type="text"
+                id="search-input"
+                placeholder="Search Music..."
+              />
+              <kbd>Ctrl+K</kbd>
+            </div>
+            <div class="user-profile">
+              <div class="notification-bell">
+                <span>🔔</span>
+                <div class="notification-dot"></div>
+              </div>
+              <div class="avatar">
+                <span>👤</span>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <!-- FEATURED SECTION -->
+        <section class="featured" id="featured-section">
+          <div class="featured-content">
+            <span class="featured-badge">✨ Featured Artist</span>
+            <h2 id="featured-title">Alan Walker – Faded</h2>
+            <p id="featured-desc">
+              You were the shadow to my light, did you feel us?
+            </p>
+            <div class="featured_btns">
+              <button class="play_btn" id="featured-play">
+                <span>▶</span> Play Now
+              </button>
+              <button class="follow_btn"><span>➕</span> Follow</button>
+            </div>
+          </div>
+          <div class="featured-visual">
+            <img
+              id="featured-img"
+              src="pictures/poster1.jpg"
+              alt="Featured Artist"
+            />
+            <div class="featured-glow"></div>
+          </div>
+        </section>
+
+        <!-- FAVORITES SECTION (Main Content) -->
+        <section class="songs-section favorites-section" id="favorites-section">
+          <div class="section-header">
+            <h3 class="section_title">❤️ Your Favorites</h3>
+            <div class="section-actions">
+              <button
+                class="action-btn"
+                id="play-all-favorites"
+                title="Play all favorites"
+              >
+                ▶ Play All
+              </button>
+              <button
+                class="action-btn secondary"
+                id="shuffle-favorites"
+                title="Shuffle favorites"
+              >
+                🔀 Shuffle
+              </button>
+            </div>
+          </div>
+          <div class="favorites-grid" id="favorites-grid">
+            <!-- Favorites cards populated by script.js -->
+          </div>
+          <div class="empty-favorites-main" id="empty-favorites-main">
+            <div class="empty-state">
+              <span class="empty-icon-large">💔</span>
+              <h4>No Favorite Songs Yet</h4>
+              <p>
+                Start adding songs to your favorites by clicking the heart icon
+                on any track
+              </p>
+              <button class="discover-btn" id="discover-songs-btn">
+                Discover Songs
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- POPULAR SONGS -->
+        <section class="songs-section" id="discover-section">
+          <div class="section-header">
+            <h3 class="section_title">Popular Songs</h3>
+            <div class="section-controls">
+              <button class="view-btn active" data-view="grid">▦</button>
+              <button class="view-btn" data-view="list">☰</button>
+            </div>
+          </div>
+
+          <div class="popular_songs" id="songs-grid">
+            <!-- Songs populated by script.js -->
+          </div>
+        </section>
+
+        <!-- RECENTLY PLAYED -->
+        <section class="songs-section">
+          <div class="section-header">
+            <h3 class="section_title">Recently Played</h3>
+            <a href="#" class="see-all">See All →</a>
+          </div>
+          <div class="recent-tracks" id="recent-tracks">
+            <!-- Recent tracks populated by script.js -->
+          </div>
+        </section>
+      </main>
+
+      <!-- PLAYER BAR -->
+      <footer class="player" id="player-container">
+        <div class="player-info">
+          <div class="track-visuals">
+            <div class="visualizer-bars" id="visualizer">
+              <div class="v-bar"></div>
+              <div class="v-bar"></div>
+              <div class="v-bar"></div>
+              <div class="v-bar"></div>
+              <div class="v-bar"></div>
+            </div>
+            <div class="player-artwork">
+              <img
+                id="player-img"
+                src="pictures/poster1.jpg"
+                alt="Now Playing"
+              />
+              <button
+                class="like-btn"
+                id="like-btn"
+                title="Add to Favorites (L)"
+              >
+                🤍
+              </button>
+            </div>
+            <div class="player-meta">
+              <h4 id="player-track-name">Select a track</h4>
+              <p id="player-artist-name">Artist</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="player-controls">
+          <div class="control-btns">
+            <button class="sub-btn" id="shuffle-btn" title="Shuffle (S)">
+              🔀
+            </button>
+            <button id="prev-btn" class="main-control-btn" title="Previous (P)">
+              ⏮
+            </button>
+            <button
+              id="play-btn"
+              class="play-pause-btn"
+              title="Play/Pause (Space)"
+            >
+              ▶
+            </button>
+            <button id="next-btn" class="main-control-btn" title="Next (N)">
+              ⏭
+            </button>
+            <button class="sub-btn" id="repeat-btn" title="Repeat (R)">
+              🔁
+            </button>
+          </div>
+          <div class="progress-wrapper">
+            <span id="curr-time">0:00</span>
+            <div class="progress-bar-container" id="seek-container">
+              <div class="progress-bg"></div>
+              <div class="progress-fill" id="seek-fill"></div>
+              <div class="progress-thumb" id="seek-thumb"></div>
+            </div>
+            <span id="total-duration">0:00</span>
+          </div>
+        </div>
+
+        <div class="player-extras">
+          <!-- <button class="sub-btn" id="lyrics-btn" title="Lyrics">📝</button>
+          <button class="sub-btn" id="queue-btn" title="Queue">📑</button> -->
+          <div class="volume-box">
+            <button class="volume-icon" id="volume-icon" title="Mute (M)">
+              🔊
+            </button>
+            <div class="volume-bar-container" id="volume-container">
+              <div class="volume-fill" id="volume-fill"></div>
+              <div class="volume-thumb" id="volume-thumb"></div>
+            </div>
+            <span class="volume-percent" id="volume-percent">70%</span>
+          </div>
+          <!-- <button
+            class="sub-btn fullscreen-btn"
+            id="fullscreen-btn"
+            title="Fullscreen"
+          >
+            ⛶
+          </button> -->
+        </div>
+      </footer>
+
+      <!-- KEYBOARD SHORTCUTS MODAL -->
+      <div class="modal" id="shortcuts-modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3>⌨️ Keyboard Shortcuts</h3>
+            <button class="modal-close" id="modal-close">✕</button>
+          </div>
+          <div class="shortcuts-grid">
+            <div class="shortcut">
+              <kbd>Space</kbd><span>Play / Pause</span>
+            </div>
+            <div class="shortcut"><kbd>N</kbd><span>Next Track</span></div>
+            <div class="shortcut"><kbd>P</kbd><span>Previous Track</span></div>
+            <div class="shortcut"><kbd>S</kbd><span>Toggle Shuffle</span></div>
+            <div class="shortcut"><kbd>R</kbd><span>Toggle Repeat</span></div>
+            <div class="shortcut"><kbd>M</kbd><span>Mute / Unmute</span></div>
+            <div class="shortcut"><kbd>↑</kbd><span>Volume Up</span></div>
+            <div class="shortcut"><kbd>↓</kbd><span>Volume Down</span></div>
+            <div class="shortcut"><kbd>←</kbd><span>Seek -10s</span></div>
+            <div class="shortcut"><kbd>→</kbd><span>Seek +10s</span></div>
+            <div class="shortcut">
+              <kbd>L</kbd><span>Add to Favorites</span>
+            </div>
+            <div class="shortcut"><kbd>F</kbd><span>Show Favorites</span></div>
+            <div class="shortcut"><kbd>?</kbd><span>Show Shortcuts</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TOAST NOTIFICATION -->
+      <div class="toast" id="toast">
+        <span class="toast-icon" id="toast-icon">✓</span>
+        <span class="toast-message" id="toast-message">Action completed</span>
+      </div>
+
+      <!-- CONTEXT MENU FOR SONGS -->
+      <div class="context-menu" id="context-menu">
+        <div class="context-menu-item" id="ctx-play"><span>▶</span> Play</div>
+        <div class="context-menu-item" id="ctx-add-favorite">
+          <span>❤️</span> Add to Favorites
+        </div>
+        <div class="context-menu-item" id="ctx-remove-favorite">
+          <span>💔</span> Remove from Favorites
+        </div>
+        <div class="context-menu-divider"></div>
+        <div class="context-menu-item" id="ctx-add-queue">
+          <span>📋</span> Add to Queue
+        </div>
+        <div class="context-menu-item" id="ctx-share">
+          <span>📤</span> Share
+        </div>
+      </div>
+    </div>
+
+    <!-- Hidden audio element -->
+    <audio id="audio-engine" preload="metadata"></audio>
+
+    <script src="script.js"></script>
+    <!-- <script src="admin_logic.js"></script>
+    <script src="script_backened_refrence.js"></script> -->
+  </body>
+</html>
